@@ -1,0 +1,269 @@
+<html>
+  <head>
+    <title>JS - GoKit Results Page</title>
+	<link rel="stylesheet" href="./style.css"/>
+		<script type="text/javascript">
+	
+	function RealTypeOf(v) {
+  if (typeof(v) == "object") {
+    if (v === null) return "null";
+    if (v.constructor == (new Array).constructor) return "array";
+    if (v.constructor == (new Date).constructor) return "date";
+    if (v.constructor == (new RegExp).constructor) return "regex";
+    return "object";
+  }
+  return typeof(v);
+}
+
+function prettyJ(json) {
+  if (typeof json !== 'string') {
+    json = JSON.stringify(json, undefined, 2);
+  }
+  return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, 
+    function (match) {
+      let cls = "\x1b[36m";
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          cls = "\x1b[34m";
+        } else {
+          cls = "\x1b[32m";
+        }
+      } else if (/true|false/.test(match)) {
+        cls = "\x1b[35m"; 
+      } else if (/null/.test(match)) {
+        cls = "\x1b[31m";
+      }
+      return cls + match + "\x1b[0m";
+    }
+  );
+}
+
+function reviver (key, value) {
+   var num = Date.parse(value);
+   if (num) {
+       return new Date(num);
+   }
+   return value;
+}
+	</script>
+	<script type="text/ajax">
+	function FormatJSON(oData, sIndent) {
+    if (arguments.length < 2) {
+        var sIndent = "";
+    }
+    var sIndentStyle = "    ";
+    var sDataType = RealTypeOf(oData);
+
+    // open object
+    if (sDataType == "array") {
+        if (oData.length == 0) {
+            return "[]";
+        }
+        var sHTML = "[";
+    } else {
+        var iCount = 0;
+        $.each(oData, function() {
+            iCount++;
+            return;
+        });
+        if (iCount == 0) { // object is empty
+            return "{}";
+        }
+        var sHTML = "{";
+    }
+
+    // loop through items
+    var iCount = 0;
+    $.each(oData, function(sKey, vValue) {
+        if (iCount > 0) {
+            sHTML += ",";
+        }
+        if (sDataType == "array") {
+            sHTML += ("\n" + sIndent + sIndentStyle);
+        } else {
+            sHTML += ("\n" + sIndent + sIndentStyle + "\"" + sKey + "\"" + ": ");
+        }
+
+        // display relevant data type
+        switch (RealTypeOf(vValue)) {
+            case "array":
+            case "object":
+                sHTML += FormatJSON(vValue, (sIndent + sIndentStyle));
+                break;
+            case "boolean":
+            case "number":
+                sHTML += vValue.toString();
+                break;
+            case "null":
+                sHTML += "null";
+                break;
+            case "string":
+                sHTML += ("\"" + vValue + "\"");
+                break;
+            default:
+                sHTML += ("TYPEOF: " + typeof(vValue));
+        }
+
+        // loop
+        iCount++;
+    });
+
+    // close object
+    if (sDataType == "array") {
+        sHTML += ("\n" + sIndent + "]");
+    } else {
+        sHTML += ("\n" + sIndent + "}");
+    }
+
+    // return
+    return sHTML;
+	}
+	</script>
+	
+	<script type="text/javascript">
+	
+	function AR() {
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	//var myArr = JSON.stringify(this.responseText,null,'\t');
+    //console.log(myArr);
+	//document.getElementById("user").innerHTML = "<pre>"+JSON.stringify(this.responseText,undefined, 2) +"</pre>"
+	//document.body.innerHTML = FormatJSON(myArr)
+	//document.body.innerHTML = myArr
+	//var myArr = prettyJ(this.responseText)
+	//console.log(myArr);
+	//document.body.innerHTML = myArr
+
+	var obj = JSON.stringify(this.responseText, reviver); 
+  
+	document.getElementById("user").innerHTML = obj;
+	
+	};
+	xmlhttp.open("GET", "http://localhost:8081/industries", true);
+	xmlhttp.send();
+	}
+	
+	function SI(ide) {
+	//alert(ide)
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	var obj = JSON.stringify(this.responseText, reviver); 
+ 	document.getElementById("user").innerHTML = obj;
+	};
+	xmlhttp.open("GET", "http://localhost:8081/industries/"+ide, true);
+	xmlhttp.send();
+	}
+	
+	function AIN(str) {
+	//alert(str)
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	var obj = JSON.stringify(this.responseText, reviver); 
+ 	document.getElementById("user").innerHTML = obj;
+	};
+	xmlhttp.open("POST", "http://localhost:8081/createindustries/"+str, true);
+	xmlhttp.send();
+	}
+	
+	function DID(st) {
+	//alert(st)
+	var xmlhttp = new XMLHttpRequest();
+	xmlhttp.onreadystatechange = function() {
+	var obj = JSON.stringify(this.responseText, reviver); 
+ 	document.getElementById("user").innerHTML = obj;
+	};
+	xmlhttp.open("POST", "http://localhost:8081/deleteindustries/"+st, true);
+	xmlhttp.send();
+	}
+	
+	function getRadioVal(form, name) {
+    var val;
+    // get list of radio buttons with specified name
+    var radios = form.elements[name];
+    
+    // loop through list of radio buttons
+    for (var i=0, len=radios.length; i<len; i++) {
+        if ( radios[i].checked ) { // radio checked?
+            val = radios[i].value; // if so, hold its value in val
+            break; // and break out of for loop
+        }
+    }
+    return val; // return value of checked radio or undefined if none checked
+}
+	</script>
+	
+  </head>
+
+  <body>
+    
+<div class="container">
+<div class="mainr">
+
+<h2>Industry Results</h2>
+<p id="user"></p>
+
+	<form action="#" method="post" class="demoForm" id="demoForm" onclick="return getRadioVal()">
+    <fieldset>
+    <p>Select Action:</p>
+    <p>
+        <label><input type="radio" name="SA" id="AR" onclick="return CheckAR();"/> All Results </label>
+        <label><input type="radio" name="SA" id="SI" onclick="return CheckSI();"/> Specific ID </label>
+        <label><input type="radio" name="SA" id="AIN" onclick="return CheckAIN();"/> Add ID-Name </label>
+        <label><input type="radio" name="SA" id="DID" onclick="return CheckDID();"/> Delete ID </label>
+		
+		<br>
+
+			<input type="text"  name="ide" maxlength="4"  id="pin" " value="11"/>
+    </p>
+       
+	 <script type="text/javascript"> 
+	 function CheckAR() {
+		 if(document.getElementById('AR').checked)
+		 {
+			return AR();
+		 }
+	 }
+	 </script>
+	 <script type="text/javascript"> 
+	 function CheckSI() {
+		 if(document.getElementById('SI').checked)
+		 {
+			return SI(document.getElementById('pin').value);
+		}
+	 }
+	 </script>
+	 <script type="text/javascript"> 
+	 function CheckAIN() {
+		 if(document.getElementById('AIN').checked)
+		 { 
+			return AIN(document.getElementById('pin').value);
+		}
+	 }
+	 </script>
+	 <script type="text/javascript"> 
+	 function CheckDID() {
+		 if(document.getElementById('DID').checked)
+		 {
+			DID(document.getElementById('pin').value);
+			return AR();
+		}
+	 }
+	 </script>
+	   
+    </fieldset>
+	</form>
+
+	
+	<div id="user">
+	</div>
+
+</div>
+</div>
+
+
+
+
+
+
+  </body>
+</html>
