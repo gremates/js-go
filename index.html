@@ -1,0 +1,53 @@
+<html>
+  <head>
+    <title>JS - GoKit Test Page</title>
+	<link rel="stylesheet" href="./style.css"/>
+	<script type="text/javascript">
+	function validateForm() {
+		var x = document.forms["myForm"]["fname"].value;
+		var y = document.forms["myForm"]["fpwd"].value;
+		if (x == "" ) {
+			alert("UserName must be filled out");
+			return false;
+		}
+		if (y == "" ) {
+			alert("PWD must be filled out");
+			return false;
+		}
+		if (x == "test" && y == "test")
+		{
+			alert("Lets redirect");
+			return true;
+		}
+		else
+		{
+			alert("Please use the UserName and password as \"test\" ")
+			return false;
+		}
+	}
+	</script>
+	
+  </head>
+
+  <body>
+    
+<div class="container">
+<div class="main">
+<h2>Login Form Validation</h2>
+<form name="myForm" action="./results.html" onsubmit="return validateForm()" method="post">
+	<label>UserName :</label>
+	<input type="text" name="fname">
+	<label>Password :</label>
+	<input type="password" name="fpwd">
+	<input type="submit" value="Submit">
+</form>
+</div>
+</div>
+
+
+
+
+
+
+  </body>
+</html>
