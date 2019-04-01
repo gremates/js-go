@@ -1,0 +1,12 @@
+{
+  "name": "Example Go by Prashanth",
+  "description": "Javascript & Go Example App by Prashanth Nair",
+  "keywords": [
+    "js-go",
+    "go",
+    "sample",
+    "example"
+  ],
+  "website": "http://github.com/heroku/js-go",
+  "repository": "http://github.com/heroku/js-go"
+}
