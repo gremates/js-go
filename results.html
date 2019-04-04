@@ -139,7 +139,8 @@ function reviver (key, value) {
 	document.getElementById("user").innerHTML = obj;
 	
 	};
-	xmlhttp.open("GET", "http://localhost:8081/industries", true);
+	//xmlhttp.open("GET", "http://localhost:8081/industries", true);
+	xmlhttp.open("GET", "http://js-go.herokuapp.com/industries", true);
 	xmlhttp.send();
 	}
 	
@@ -150,7 +151,8 @@ function reviver (key, value) {
 	var obj = JSON.stringify(this.responseText, reviver); 
  	document.getElementById("user").innerHTML = obj;
 	};
-	xmlhttp.open("GET", "http://localhost:8081/industries/"+ide, true);
+	//xmlhttp.open("GET", "http://localhost:8081/industries/"+ide, true);
+	xmlhttp.open("GET", "http://js-go.herokuapp.com/industries/"+ide, true);
 	xmlhttp.send();
 	}
 	
@@ -161,7 +163,8 @@ function reviver (key, value) {
 	var obj = JSON.stringify(this.responseText, reviver); 
  	document.getElementById("user").innerHTML = obj;
 	};
-	xmlhttp.open("POST", "http://localhost:8081/createindustries/"+str, true);
+	//xmlhttp.open("POST", "http://localhost:8081/createindustries/"+str, true);
+	xmlhttp.open("POST", "http://js-go.herokuapp.com/createindustries/"+str, true);
 	xmlhttp.send();
 	}
 	
@@ -172,7 +175,8 @@ function reviver (key, value) {
 	var obj = JSON.stringify(this.responseText, reviver); 
  	document.getElementById("user").innerHTML = obj;
 	};
-	xmlhttp.open("POST", "http://localhost:8081/deleteindustries/"+st, true);
+	//xmlhttp.open("POST", "http://localhost:8081/deleteindustries/"+st, true);
+	xmlhttp.open("POST", "http://js-go.herokuapp.com/deleteindustries/"+st, true);
 	xmlhttp.send();
 	}
 	

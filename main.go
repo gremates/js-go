@@ -54,7 +54,12 @@ func handleRequests() {
 	//methodsOk := handlers.AllowedMethods([]string{"GET", "HEAD", "POST", "PUT", "OPTIONS", "DELETE"})
 	methodsOk := handlers.AllowedMethods([]string{"GET", "POST", "DELETE", "OPTIONS"})
 
-	log.Fatal(http.ListenAndServe(":8081", handlers.CORS(originsOk, headersOk, methodsOk)(myRouter)))
+	//log.Fatal(http.ListenAndServe(":80", handlers.CORS(originsOk, headersOk, methodsOk)(myRouter)))
+	port := os.Getenv("PORT")
+       if port == "" {
+               port = "8081"
+       }
+       log.Fatal(http.ListenAndServe(":"+port, handlers.CORS(originsOk, headersOk, methodsOk)(myRouter)))
 	
 }
 
